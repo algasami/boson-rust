@@ -10,6 +10,56 @@ pub struct Mat4x4 {
     pub data: [[f64; 4]; 4],
 }
 
+impl fmt::Display for Vec4 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "({}, {}, {}, {})",
+            self.data[0], self.data[1], self.data[2], self.data[3]
+        )
+    }
+}
+
+impl fmt::Display for Mat4x4 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        for i in 0..4 {
+            let res = write!(
+                f,
+                "|{}\t{}\t{}\t{}|{}",
+                self.data[i][0],
+                self.data[i][1],
+                self.data[i][2],
+                self.data[i][3],
+                if i == 3 { ' ' } else { '\n' }
+            );
+            match res {
+                Ok(_) => {}
+                Err(t) => {
+                    panic!("error during fmt mat4x4 = {}", t);
+                }
+            }
+        }
+        fmt::Result::Ok(())
+    }
+}
+
+impl ops::Mul<Self> for Mat4x4 {
+    type Output = Self;
+    fn mul(self, m: Self) -> Self {
+        let mut out: Self = Self {
+            data: [[0.0; 4]; 4],
+        };
+        for i in 0..4 {
+            for j in 0..4 {
+                for k in 0..4 {
+                    out.data[i][k] += self.data[i][k] * m.data[k][j];
+                }
+            }
+        }
+        out
+    }
+}
+
 impl ops::Mul<Vec4> for Mat4x4 {
     type Output = Vec4;
     fn mul(self, v: Vec4) -> Vec4 {
