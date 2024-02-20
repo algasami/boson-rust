@@ -11,7 +11,7 @@ pub struct Mat4x4 {
 }
 
 impl fmt::Display for Vec4 {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
             "({}, {}, {}, {})",
@@ -21,7 +21,7 @@ impl fmt::Display for Vec4 {
 }
 
 impl fmt::Display for Mat4x4 {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         for i in 0..4 {
             let res = write!(
                 f,
