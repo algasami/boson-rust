@@ -1,3 +1,5 @@
+use std::{fmt, ops};
+
 #[derive(Copy, Clone)]
 pub struct Vec4 {
     pub data: [f64; 4],
@@ -8,7 +10,7 @@ pub struct Mat4x4 {
     pub data: [[f64; 4]; 4],
 }
 
-impl std::ops::Mul<Vec4> for Mat4x4 {
+impl ops::Mul<Vec4> for Mat4x4 {
     type Output = Vec4;
     fn mul(self, v: Vec4) -> Vec4 {
         let mut out: Vec4 = Vec4 { data: [0.0; 4] };
@@ -21,7 +23,7 @@ impl std::ops::Mul<Vec4> for Mat4x4 {
     }
 }
 
-impl std::ops::Mul<f64> for Mat4x4 {
+impl ops::Mul<f64> for Mat4x4 {
     type Output = Mat4x4;
     fn mul(self, x: f64) -> Self {
         let mut out = Self { ..self };
@@ -34,7 +36,7 @@ impl std::ops::Mul<f64> for Mat4x4 {
     }
 }
 
-impl std::ops::Div<f64> for Mat4x4 {
+impl ops::Div<f64> for Mat4x4 {
     type Output = Mat4x4;
     fn div(self, x: f64) -> Self {
         let mut out = Self { ..self };
