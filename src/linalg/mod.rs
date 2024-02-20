@@ -1,11 +1,11 @@
 use std::{fmt, ops};
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct Vec4 {
     pub data: [f64; 4],
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct Mat4x4 {
     pub data: [[f64; 4]; 4],
 }
@@ -40,6 +40,21 @@ impl fmt::Display for Mat4x4 {
             }
         }
         fmt::Result::Ok(())
+    }
+}
+
+impl ops::Add<Self> for Mat4x4 {
+    type Output = Self;
+    fn add(self, m: Self) -> Self {
+        let mut out: Self = Self {
+            data: [[0.0; 4]; 4],
+        };
+        for i in 0..4 {
+            for j in 0..4 {
+                out.data[i][j] = self.data[i][j] + m.data[i][j];
+            }
+        }
+        out
     }
 }
 
@@ -99,6 +114,27 @@ impl ops::Div<f64> for Mat4x4 {
     }
 }
 
+impl ops::Add<Self> for Vec4 {
+    type Output = Self;
+    fn add(self, m: Self) -> Self {
+        let mut out: Self = Self { data: [0.0; 4] };
+        for i in 0..4 {
+            out.data[i] = self.data[i] + m.data[i];
+        }
+        out
+    }
+}
+
+impl ops::Mul<f64> for Vec4 {
+    type Output = Vec4;
+    fn mul(self, x: f64) -> Self {
+        let mut out = Self { ..self };
+        for i in 0..4 {
+            out.data[i] *= x;
+        }
+        out
+    }
+}
 // Global vars
 pub static ID_MAT4X4: Mat4x4 = Mat4x4 {
     data: [
