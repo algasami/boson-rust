@@ -74,6 +74,33 @@ impl ops::Mul<Self> for Mat4x4 {
         out
     }
 }
+impl PartialEq for Mat4x4 {
+    fn eq(&self, other: &Self) -> bool {
+        let mut same: bool = true;
+        for i in 0..4 {
+            for j in 0..4 {
+                if self.data[i][j] != other.data[i][j] {
+                    same = false;
+                    break;
+                }
+            }
+        }
+        same
+    }
+}
+
+impl PartialEq for Vec4 {
+    fn eq(&self, other: &Self) -> bool {
+        let mut same: bool = true;
+        for i in 0..4 {
+            if self.data[i] != other.data[i] {
+                same = false;
+                break;
+            }
+        }
+        same
+    }
+}
 
 impl ops::Mul<Vec4> for Mat4x4 {
     type Output = Vec4;
