@@ -163,7 +163,7 @@ impl ops::Mul<f64> for Vec4 {
     }
 }
 // Global vars
-pub static ID_MAT4X4: Mat4x4 = Mat4x4 {
+pub const ID_MAT4X4: Mat4x4 = Mat4x4 {
     data: [
         [1.0, 0.0, 0.0, 0.0],
         [0.0, 1.0, 0.0, 0.0],
