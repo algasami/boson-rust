@@ -3,11 +3,8 @@
  * This is intended as a singleton (although it's never forbidden to instantiate multiple instances)
  */
 pub struct BosonEngine<const WIDTH: usize, const HEIGHT: usize> {
-    pub config: BosonConfig,
-
     ibuffer: [[f64; WIDTH]; HEIGHT],
 }
-pub struct BosonConfig {}
 
 impl<const W: usize, const H: usize> BosonEngine<W, H> {
     pub fn display(&self) {
@@ -23,14 +20,16 @@ impl<const W: usize, const H: usize> BosonEngine<W, H> {
 impl<const W: usize, const H: usize> Default for BosonEngine<W, H> {
     fn default() -> BosonEngine<W, H> {
         BosonEngine::<W, H> {
-            config: BosonConfig {},
-            ibuffer: [[0.0; W]; H],
+            ibuffer: [[-0.1; W]; H],
         }
     }
 }
 
 fn get_luma(f: f64) -> char {
-    return LUMA_INDEX.as_bytes()[((LUMA_INDEX.len() - 1) as f64 * f) as usize] as char;
+    if f < 0.0 {
+        return ' ';
+    }
+    LUMA_INDEX.as_bytes()[((LUMA_INDEX.len() - 1) as f64 * f) as usize] as char
 }
 
 const LUMA_INDEX: &'static str =
