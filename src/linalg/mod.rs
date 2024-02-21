@@ -22,6 +22,21 @@ impl Vec3 {
     pub fn get_unit(self) -> Self {
         self / self.get_magnitude()
     }
+
+    pub fn dot(&self, v: &Self) -> f64 {
+        self.data[0] * v.data[0] + self.data[1] * v.data[1] + self.data[2] * v.data[2]
+    }
+
+    pub fn cross(&self, b: &Self) -> Self {
+        Vec3 {
+            data: [
+                self.data[1] * b.data[2] - self.data[2] * b.data[1],
+                self.data[2] * b.data[0] - self.data[0] * b.data[2],
+                self.data[0] * b.data[1] - self.data[1] * b.data[0],
+                1.0,
+            ],
+        }
+    }
 }
 
 impl fmt::Display for Vec3 {
@@ -158,11 +173,34 @@ impl ops::Div<f64> for Mat4x4 {
 impl ops::Add<Self> for Vec3 {
     type Output = Self;
     fn add(self, m: Self) -> Self {
-        let mut out: Self = Self { data: [0.0; 4] };
+        let mut out: Self = Self { ..self };
         for i in 0..3 {
-            out.data[i] = self.data[i] + m.data[i];
+            out.data[i] += m.data[i];
         }
         out
+    }
+}
+impl ops::Sub<Self> for Vec3 {
+    type Output = Self;
+    fn sub(self, m: Self) -> Self {
+        let mut out: Self = Self { ..self };
+        for i in 0..3 {
+            out.data[i] -= m.data[i];
+        }
+        out
+    }
+}
+
+impl ops::AddAssign for Vec3 {
+    fn add_assign(&mut self, other: Self) {
+        *self = Self {
+            data: [
+                self.data[0] + other.data[0],
+                self.data[1] + other.data[1],
+                self.data[2] + other.data[2],
+                self.data[3], // Z should not be touched!
+            ],
+        };
     }
 }
 
@@ -185,6 +223,22 @@ impl ops::Div<f64> for Vec3 {
         }
         out
     }
+}
+
+const EPSILON: f64 = 0.1;
+pub fn check_inside(p0: &Vec3, p1: &Vec3, p2: &Vec3, p: &Vec3) -> bool {
+    let mut n1 = (*p0 - *p).cross(&(*p1 - *p));
+    let mut n2 = (*p1 - *p).cross(&(*p2 - *p));
+    let mut n3 = (*p2 - *p).cross(&(*p0 - *p));
+
+    if n1.get_magnitude() < EPSILON || n2.get_magnitude() < EPSILON || n3.get_magnitude() < EPSILON
+    {
+        return true;
+    }
+    n1 = n1.get_unit();
+    n2 = n2.get_unit();
+    n3 = n3.get_unit();
+    n1.dot(&n2) > 1.0 - EPSILON && n2.dot(&n3) > 1.0 - EPSILON
 }
 // Global vars
 pub const ID_MAT4X4: Mat4x4 = Mat4x4 {
