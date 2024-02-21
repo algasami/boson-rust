@@ -140,6 +140,7 @@ impl ops::Mul<Vec3> for Mat4x4 {
                 out.data[i] += self.data[i][j] * v.data[i];
             }
         }
+        out.data[3] = 1.0;
         out
     }
 }
@@ -177,6 +178,7 @@ impl ops::Add<Self> for Vec3 {
         for i in 0..3 {
             out.data[i] += m.data[i];
         }
+        out.data[3] = 1.0;
         out
     }
 }
