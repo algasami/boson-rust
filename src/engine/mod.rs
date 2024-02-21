@@ -7,6 +7,9 @@ pub struct BosonEngine<const WIDTH: usize, const HEIGHT: usize> {
 }
 
 impl<const W: usize, const H: usize> BosonEngine<W, H> {
+    /**
+     * Display assumes that **ibuffer is ready to go**, so bear this in mind.
+     */
     pub fn display(&self) {
         for i in 0..H {
             for j in 0..W {
