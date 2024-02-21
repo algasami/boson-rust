@@ -17,7 +17,7 @@ pub struct BosonEngine<'a, const WIDTH: usize, const HEIGHT: usize> {
 }
 
 pub struct Object3D {
-    pub triangles: Vec<[Vec3; 3]>,
+    pub triangles: Vec<[usize; 3]>,
     pub model_matrix: Mat4x4,
 }
 
@@ -53,12 +53,18 @@ impl<'a, const W: usize, const H: usize> BosonEngine<'a, W, H> {
                     if let Some(objects) = self.objects {
                         for obj in objects {
                             for tri in obj.triangles.as_slice() {
-                                let inside =
-                                    linalg::check_inside(&tri[0], &tri[1], &tri[2], &current_pos);
-                                if inside {
-                                    hit = true;
-                                    unit_normal =
-                                        (tri[1] - tri[0]).cross(&(tri[2] - tri[0])).get_unit();
+                                if let Some(vertices) = self.vertices {
+                                    let p0 = obj.model_matrix * vertices[tri[0]];
+                                    let p1 = obj.model_matrix * vertices[tri[1]];
+                                    let p2 = obj.model_matrix * vertices[tri[2]];
+                                    let inside = linalg::check_inside(&p0, &p1, &p2, &current_pos);
+                                    if inside {
+                                        hit = true;
+                                        unit_normal = (p1 - p0).cross(&(p2 - p0)).get_unit();
+                                        break;
+                                    }
+                                } else {
+                                    println!("self.objects is defined, but self.vertices is NOT!");
                                     break;
                                 }
                             }
@@ -74,9 +80,9 @@ impl<'a, const W: usize, const H: usize> BosonEngine<'a, W, H> {
                     }
                 }
                 if hit {
-                    self.ibuffer[i][j] = unit_normal.dot(&Vec3 {
+                    self.ibuffer[i][j] = f64::abs(unit_normal.dot(&Vec3 {
                         data: [0.0, -0.5, 0.5, 1.0],
-                    });
+                    }));
                 }
             }
         }
