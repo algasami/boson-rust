@@ -17,7 +17,7 @@ mod tests {
     #[test]
     fn linalg_mat4x4_vec4_mul() {
         let v0 = linalg::Vec3 {
-            data: [0.0, 1.0, 1.0],
+            data: [1.0, 0.0, 0.0],
         };
         let mat = linalg::Mat4x4 {
             data: [
@@ -28,9 +28,9 @@ mod tests {
             ],
         };
         assert_eq!(
-            mat * v0,
+            linalg::ID_MAT4X4 * mat * v0,
             linalg::Vec3 {
-                data: [0.0, 1.0, 3.0]
+                data: [1.0, 0.0, 2.0]
             }
         );
     }

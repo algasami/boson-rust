@@ -91,7 +91,7 @@ impl ops::Mul<Self> for Mat4x4 {
         for i in 0..4 {
             for j in 0..4 {
                 for k in 0..4 {
-                    out.data[i][k] += self.data[i][k] * m.data[k][j];
+                    out.data[i][j] += self.data[i][k] * m.data[k][j];
                 }
             }
         }

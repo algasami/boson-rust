@@ -1,18 +1,18 @@
 use boson_rust::{
     engine::{BosonEngine, Object3D},
-    linalg::{Mat4x4, Vec3},
+    linalg::{Mat4x4, Vec3, ID_MAT4X4},
 };
 fn main() {
-    let mut engine: BosonEngine<100, 20> = Default::default();
+    let mut engine: BosonEngine<30, 30> = Default::default();
     let vertices: Vec<Vec3> = vec![
         Vec3 {
-            data: [0.3, 0.0, 0.0],
+            data: [1.0, 0.0, 0.0],
         },
         Vec3 {
-            data: [0.0, 0.3, 0.0],
+            data: [0.0, 1.0, 0.0],
         },
         Vec3 {
-            data: [0.0, 0.0, 0.3],
+            data: [0.0, 0.0, 1.0],
         },
         Vec3 {
             data: [0.0, 0.0, 0.0],
@@ -24,13 +24,14 @@ fn main() {
             data: [
                 [1.0, 0.0, 0.0, 0.0],
                 [0.0, 1.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0, 3.0],
+                [0.0, 0.0, 1.0, 1.2],
                 [0.0, 0.0, 0.0, 1.0],
             ],
         },
     }];
     engine.vertices = Some(&vertices);
     engine.objects = Some(&objects);
+    engine.view_matrix = Some(&ID_MAT4X4);
     engine.raytrace();
     engine.display();
 }
