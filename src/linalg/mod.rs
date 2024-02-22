@@ -229,8 +229,7 @@ pub fn check_inside(p0: &Vec3, p1: &Vec3, p2: &Vec3, p: &Vec3) -> bool {
     let mut n2 = (*p1 - *p).cross(&(*p2 - *p));
     let mut n3 = (*p2 - *p).cross(&(*p0 - *p));
 
-    if n1.get_magnitude() < EPSILON || n2.get_magnitude() < EPSILON || n3.get_magnitude() < EPSILON
-    {
+    if n1.get_magnitude() <= 0.0 || n2.get_magnitude() <= 0.0 || n3.get_magnitude() <= 0.0 {
         return true;
     }
     n1 = n1.get_unit();
