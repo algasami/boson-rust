@@ -40,8 +40,8 @@ impl<'a, const W: usize, const H: usize> BosonEngine<'a, W, H> {
             for j in 0..W {
                 let mut current_pos = Vec3 {
                     data: [
-                        ((j / W) as f64) * 2.0 - 1.0,
-                        1.0 - ((i / H) as f64) * 2.0,
+                        (j as f64 / W as f64) * 2.0 - 1.0,
+                        1.0 - (i as f64 / H as f64) * 2.0,
                         1.0,
                     ],
                 };
@@ -67,7 +67,7 @@ impl<'a, const W: usize, const H: usize> BosonEngine<'a, W, H> {
                                 let p0 = &vertices[tri[0]];
                                 let p1 = &vertices[tri[1]];
                                 let p2 = &vertices[tri[2]];
-                                println!("{} {} {} {}", p0, p1, p2, &current_pos);
+                                // println!("{} {} {} {}", p0, p1, p2, &current_pos);
                                 let inside = linalg::check_inside(p0, p1, p2, &current_pos);
                                 if inside {
                                     hit = true;
