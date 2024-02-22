@@ -2,7 +2,7 @@ use std::{fmt, ops};
 
 #[derive(Copy, Clone, Debug)]
 pub struct Vec3 {
-    pub data: [f64; 4],
+    pub data: [f64; 3],
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -33,7 +33,6 @@ impl Vec3 {
                 self.data[1] * b.data[2] - self.data[2] * b.data[1],
                 self.data[2] * b.data[0] - self.data[0] * b.data[2],
                 self.data[0] * b.data[1] - self.data[1] * b.data[0],
-                1.0,
             ],
         }
     }
@@ -41,11 +40,7 @@ impl Vec3 {
 
 impl fmt::Display for Vec3 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(
-            f,
-            "({}, {}, {}, {})",
-            self.data[0], self.data[1], self.data[2], self.data[3]
-        )
+        write!(f, "({}, {}, {})", self.data[0], self.data[1], self.data[2])
     }
 }
 
@@ -121,7 +116,7 @@ impl PartialEq for Mat4x4 {
 impl PartialEq for Vec3 {
     fn eq(&self, other: &Self) -> bool {
         let mut same: bool = true;
-        for i in 0..4 {
+        for i in 0..3 {
             if self.data[i] != other.data[i] {
                 same = false;
                 break;
@@ -134,13 +129,16 @@ impl PartialEq for Vec3 {
 impl ops::Mul<Vec3> for Mat4x4 {
     type Output = Vec3;
     fn mul(self, v: Vec3) -> Vec3 {
-        let mut out: Vec3 = Vec3 { data: [0.0; 4] };
-        for i in 0..4 {
+        let mut out: Vec3 = Vec3 { data: [0.0; 3] };
+        for i in 0..3 {
             for j in 0..4 {
-                out.data[i] += self.data[i][j] * v.data[i];
+                if j == 3 {
+                    out.data[i] += self.data[i][j];
+                    continue;
+                }
+                out.data[i] += self.data[i][j] * v.data[j];
             }
         }
-        out.data[3] = 1.0;
         out
     }
 }
@@ -178,7 +176,6 @@ impl ops::Add<Self> for Vec3 {
         for i in 0..3 {
             out.data[i] += m.data[i];
         }
-        out.data[3] = 1.0;
         out
     }
 }
@@ -200,7 +197,6 @@ impl ops::AddAssign for Vec3 {
                 self.data[0] + other.data[0],
                 self.data[1] + other.data[1],
                 self.data[2] + other.data[2],
-                self.data[3], // Z should not be touched!
             ],
         };
     }

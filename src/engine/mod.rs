@@ -2,8 +2,8 @@ use crate::linalg::{self, Mat4x4, Vec3};
 
 // dev configs
 // TODO: Should be exposed to users as well
-const MAX_STEP_DISTANCE: f64 = 3.0;
-const MAX_STEPS: u32 = 100;
+const MAX_STEP_DISTANCE: f64 = 5.0;
+const MAX_STEPS: u32 = 200;
 const STEP_DISTANCE: f64 = MAX_STEP_DISTANCE / MAX_STEPS as f64;
 
 /**
@@ -42,13 +42,12 @@ impl<'a, const W: usize, const H: usize> BosonEngine<'a, W, H> {
                         ((j / W) as f64) * 2.0 - 1.0,
                         1.0 - ((i / H) as f64) * 2.0,
                         1.0,
-                        1.0,
                     ],
                 };
                 let ray_step = current_pos.get_unit() * STEP_DISTANCE;
                 let mut s: u32 = 0;
                 let mut hit = false;
-                let mut unit_normal = Vec3 { data: [0.0; 4] };
+                let mut unit_normal = Vec3 { data: [0.0; 3] };
                 while s < MAX_STEPS && !hit {
                     if let Some(objects) = self.objects {
                         for obj in objects {
@@ -81,7 +80,7 @@ impl<'a, const W: usize, const H: usize> BosonEngine<'a, W, H> {
                 }
                 if hit {
                     self.ibuffer[i][j] = f64::abs(unit_normal.dot(&Vec3 {
-                        data: [0.0, -0.5, 0.5, 1.0],
+                        data: [0.0, -0.5, 0.5],
                     }));
                 }
             }
