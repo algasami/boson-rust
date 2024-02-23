@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 use boson_rust::{
     engine::{BosonEngine, Object3D},
     linalg::{Mat4x4, Vec3, ID_MAT4X4},
@@ -32,6 +34,11 @@ fn main() {
     engine.vertices = Some(&vertices);
     engine.objects = Some(&objects);
     engine.view_matrix = Some(&ID_MAT4X4);
-    engine.raytrace();
-    engine.display();
+    loop {
+        let elapse = Instant::now();
+        engine.raytrace();
+        let delta = Instant::now().duration_since(elapse).as_millis();
+        engine.display();
+        println!("FPS: {}", (1000.0 / delta as f64));
+    }
 }
