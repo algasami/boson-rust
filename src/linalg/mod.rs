@@ -169,6 +169,13 @@ impl ops::Div<f64> for Mat4x4 {
     }
 }
 
+// TODO: Don't copy me!
+impl ops::MulAssign for Mat4x4 {
+    fn mul_assign(&mut self, rhs: Self) {
+        *self = *self * rhs;
+    }
+}
+
 impl ops::Add<Self> for Vec3 {
     type Output = Self;
     fn add(self, m: Self) -> Self {

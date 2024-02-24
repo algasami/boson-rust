@@ -1,44 +1,58 @@
-use std::time::Instant;
+use std::{f64::consts::PI, time::Instant};
 
 use boson_rust::{
     engine::{BosonEngine, Object3D},
-    linalg::{Mat4x4, Vec3, ID_MAT4X4},
+    linalg::{get_rotx, get_roty, Mat4x4, Vec3, ID_MAT4X4},
 };
+use clearscreen::clear;
+
 fn main() {
-    let mut engine: BosonEngine<30, 30> = Default::default();
-    let vertices: Vec<Vec3> = vec![
-        Vec3 {
-            data: [1.0, 0.0, 0.0],
-        },
-        Vec3 {
-            data: [0.0, 1.0, 0.0],
-        },
-        Vec3 {
-            data: [0.0, 0.0, 1.0],
-        },
-        Vec3 {
-            data: [0.0, 0.0, 0.0],
-        },
-    ];
-    let objects: Vec<Object3D> = vec![Object3D {
-        triangles: vec![[0, 1, 2], [0, 1, 3], [0, 2, 3], [1, 2, 3]],
-        model_matrix: Mat4x4 {
-            data: [
-                [1.0, 0.0, 0.0, 0.0],
-                [0.0, 1.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0, 1.2],
-                [0.0, 0.0, 0.0, 1.0],
-            ],
-        },
-    }];
-    engine.vertices = Some(&vertices);
-    engine.objects = Some(&objects);
-    engine.view_matrix = Some(&ID_MAT4X4);
+    let mut engine: BosonEngine<30, 30> = BosonEngine {
+        ibuffer: [[0.0; 30]; 30],
+        vertices: vec![
+            Vec3 {
+                data: [1.0, 0.0, 0.0],
+            },
+            Vec3 {
+                data: [0.0, 1.0, 0.0],
+            },
+            Vec3 {
+                data: [0.0, 0.0, 1.0],
+            },
+            Vec3 {
+                data: [0.0, 0.0, 0.0],
+            },
+        ],
+        objects: vec![Object3D {
+            triangles: vec![[0, 1, 2], [0, 1, 3], [0, 2, 3], [1, 2, 3]],
+            model_matrix: Mat4x4 {
+                data: [
+                    [1.0, 0.0, 0.0, 0.0],
+                    [0.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0, 2.0],
+                    [0.0, 0.0, 0.0, 1.0],
+                ],
+            },
+        }],
+        view_matrix: ID_MAT4X4,
+    };
+    let mut delta_time: f64 = 10.0;
     loop {
         let elapse = Instant::now();
         engine.raytrace();
-        let delta = Instant::now().duration_since(elapse).as_millis();
+        {
+            let d = Instant::now().duration_since(elapse).as_millis();
+            delta_time = d as f64 / 1000.0;
+        }
         engine.display();
-        println!("FPS: {}", (1000.0 / delta as f64));
+        println!("FPS: {}", 1.0 / delta_time);
+
+        // modify other things here
+        on_update(&mut engine, delta_time);
     }
+}
+
+fn on_update<const W: usize, const H: usize>(engine: &mut BosonEngine<W, H>, delta_time: f64) {
+    engine.objects[0].model_matrix *=
+        get_rotx(180.0 / 180.0 * PI * delta_time) * get_roty(180.0 / 180.0 * PI * delta_time);
 }
