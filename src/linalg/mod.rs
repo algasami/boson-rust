@@ -246,3 +246,36 @@ pub const ID_MAT4X4: Mat4x4 = Mat4x4 {
         [0.0, 0.0, 0.0, 1.0],
     ],
 };
+
+pub fn get_rotx(radian: f64) -> Mat4x4 {
+    Mat4x4 {
+        data: [
+            [1.0, 0.0, 0.0, 0.0],
+            [0.0, f64::cos(radian), -f64::sin(radian), 0.0],
+            [0.0, f64::sin(radian), f64::cos(radian), 0.0],
+            [0.0, 0.0, 0.0, 1.0],
+        ],
+    }
+}
+
+pub fn get_roty(radian: f64) -> Mat4x4 {
+    Mat4x4 {
+        data: [
+            [f64::cos(radian), 0.0, f64::sin(radian), 0.0],
+            [0.0, 1.0, 0.0, 0.0],
+            [-f64::sin(radian), 0.0, f64::cos(radian), 0.0],
+            [0.0, 0.0, 0.0, 1.0],
+        ],
+    }
+}
+
+pub fn get_rotz(radian: f64) -> Mat4x4 {
+    Mat4x4 {
+        data: [
+            [f64::cos(radian), -f64::sin(radian), 0.0, 0.0],
+            [f64::sin(radian), f64::cos(radian), 0.0, 0.0],
+            [0.0, 0.0, 1.0, 0.0],
+            [0.0, 0.0, 0.0, 1.0],
+        ],
+    }
+}

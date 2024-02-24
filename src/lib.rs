@@ -3,7 +3,9 @@ pub mod linalg;
 
 #[cfg(test)]
 mod tests {
-    use crate::linalg;
+    use std::f64::consts::PI;
+
+    use crate::linalg::{self, get_rotx, get_roty, get_rotz};
 
     #[test]
     fn linalg_vec4_add() {
@@ -56,5 +58,13 @@ mod tests {
             data: [0.5, 0.5, 0.0],
         };
         assert!(linalg::check_inside(&v0, &v1, &v2, &p));
+    }
+    #[test]
+    fn linalg_rot_mat() {
+        let v0 = linalg::Vec3 {
+            data: [1.0, 0.0, 0.0],
+        };
+        let v1 = get_rotx(PI) * get_roty(PI) * get_rotz(PI) * v0;
+        assert_eq!(v0.get_magnitude(), v1.get_magnitude());
     }
 }
