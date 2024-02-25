@@ -4,7 +4,6 @@ use boson_rust::{
     engine::{BosonEngine, Object3D},
     linalg::{get_rotx, get_roty, Mat4x4, Vec3, ID_MAT4X4},
 };
-use clearscreen::clear;
 
 fn main() {
     let mut engine: BosonEngine<30, 30> = BosonEngine {
@@ -27,9 +26,9 @@ fn main() {
             triangles: vec![[0, 1, 2], [0, 1, 3], [0, 2, 3], [1, 2, 3]],
             model_matrix: Mat4x4 {
                 data: [
-                    [1.0, 0.0, 0.0, 0.0],
-                    [0.0, 1.0, 0.0, 0.0],
-                    [0.0, 0.0, 1.0, 2.0],
+                    [2.0, 0.0, 0.0, 0.0],
+                    [0.0, 2.0, 0.0, 0.0],
+                    [0.0, 0.0, 2.0, 3.0],
                     [0.0, 0.0, 0.0, 1.0],
                 ],
             },
@@ -54,5 +53,5 @@ fn main() {
 
 fn on_update<const W: usize, const H: usize>(engine: &mut BosonEngine<W, H>, delta_time: f64) {
     engine.objects[0].model_matrix *=
-        get_rotx(180.0 / 180.0 * PI * delta_time) * get_roty(180.0 / 180.0 * PI * delta_time);
+        get_rotx(90.0 / 180.0 * PI * delta_time) * get_roty(90.0 / 180.0 * PI * delta_time);
 }
