@@ -6,34 +6,39 @@ use boson_rust::{
 };
 
 fn main() {
+    /*
+     referencing right values require inferred scope elevation
+    */
+    let mut vertices = vec![
+        Vec3 {
+            data: [1.0, 0.0, 0.0],
+        },
+        Vec3 {
+            data: [0.0, 1.0, 0.0],
+        },
+        Vec3 {
+            data: [0.0, 0.0, 1.0],
+        },
+        Vec3 {
+            data: [0.0, 0.0, 0.0],
+        },
+    ];
+    let mut objects = vec![Object3D {
+        mesh: vec![[0, 1, 2], [0, 1, 3], [0, 2, 3], [1, 2, 3]],
+        model_matrix: Mat4x4 {
+            data: [
+                [2.0, 0.0, 0.0, 0.0],
+                [0.0, 2.0, 0.0, 0.0],
+                [0.0, 0.0, 2.0, 3.0],
+                [0.0, 0.0, 0.0, 1.0],
+            ],
+        },
+    }];
     let mut engine: BosonEngine<30, 30> = BosonEngine {
         ibuffer: [[0.0; 30]; 30],
-        vertices: vec![
-            Vec3 {
-                data: [1.0, 0.0, 0.0],
-            },
-            Vec3 {
-                data: [0.0, 1.0, 0.0],
-            },
-            Vec3 {
-                data: [0.0, 0.0, 1.0],
-            },
-            Vec3 {
-                data: [0.0, 0.0, 0.0],
-            },
-        ],
-        objects: vec![Object3D {
-            triangles: vec![[0, 1, 2], [0, 1, 3], [0, 2, 3], [1, 2, 3]],
-            model_matrix: Mat4x4 {
-                data: [
-                    [2.0, 0.0, 0.0, 0.0],
-                    [0.0, 2.0, 0.0, 0.0],
-                    [0.0, 0.0, 2.0, 3.0],
-                    [0.0, 0.0, 0.0, 1.0],
-                ],
-            },
-        }],
-        view_matrix: ID_MAT4X4,
+        vertices: &mut vertices,
+        objects: &mut objects,
+        view_matrix: &mut ID_MAT4X4.clone(),
     };
     let mut delta_time: f64 = 10.0;
     loop {

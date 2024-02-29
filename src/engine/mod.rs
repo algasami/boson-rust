@@ -10,19 +10,20 @@ const MAX_STEPS: u32 = (MAX_STEP_DISTANCE / STEP_DISTANCE) as u32;
  * Boson engine
  * This is intended as a singleton (although it's never forbidden to instantiate multiple instances)
  */
-pub struct BosonEngine<const WIDTH: usize, const HEIGHT: usize> {
+pub struct BosonEngine<'a, const WIDTH: usize, const HEIGHT: usize> {
     pub ibuffer: [[f64; WIDTH]; HEIGHT],
-    pub vertices: Vec<Vec3>,
-    pub objects: Vec<Object3D>,
-    pub view_matrix: Mat4x4,
+    pub vertices: &'a mut Vec<Vec3>,
+    pub objects: &'a mut Vec<Object3D>,
+    pub view_matrix: &'a mut Mat4x4,
 }
 
+pub type Mesh = Vec<[usize; 3]>;
 pub struct Object3D {
-    pub triangles: Vec<[usize; 3]>,
+    pub mesh: Mesh,
     pub model_matrix: Mat4x4,
 }
 
-impl<const W: usize, const H: usize> BosonEngine<W, H> {
+impl<'a, const W: usize, const H: usize> BosonEngine<'a, W, H> {
     /**
      * Display assumes that **ibuffer is ready to go**, so bear this in mind.
      */
@@ -52,18 +53,18 @@ impl<const W: usize, const H: usize> BosonEngine<W, H> {
                 // precompute transform
                 let mut vertices: Vec<Vec3> = self.vertices.clone();
                 for obj in self.objects.as_slice() {
-                    for tri in obj.triangles.as_slice() {
+                    for tri in obj.mesh.as_slice() {
                         vertices[tri[0]] =
-                            self.view_matrix * obj.model_matrix * self.vertices[tri[0]];
+                            *self.view_matrix * obj.model_matrix * self.vertices[tri[0]];
                         vertices[tri[1]] =
-                            self.view_matrix * obj.model_matrix * self.vertices[tri[1]];
+                            *self.view_matrix * obj.model_matrix * self.vertices[tri[1]];
                         vertices[tri[2]] =
-                            self.view_matrix * obj.model_matrix * self.vertices[tri[2]];
+                            *self.view_matrix * obj.model_matrix * self.vertices[tri[2]];
                     }
                 }
                 while s < MAX_STEPS && !hit {
                     for obj in self.objects.as_slice() {
-                        for tri in obj.triangles.as_slice() {
+                        for tri in obj.mesh.as_slice() {
                             let p0 = &vertices[tri[0]];
                             let p1 = &vertices[tri[1]];
                             let p2 = &vertices[tri[2]];
@@ -84,7 +85,7 @@ impl<const W: usize, const H: usize> BosonEngine<W, H> {
                 }
                 if hit {
                     self.ibuffer[i][j] = (unit_normal.dot(
-                        &(self.view_matrix
+                        &(*self.view_matrix
                             * Vec3 {
                                 data: [0.0, -0.5, 0.5],
                             })
