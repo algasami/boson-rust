@@ -34,6 +34,7 @@ fn main() {
             ],
         },
     }];
+
     let mut engine: BosonEngine<30, 30> = BosonEngine {
         ibuffer: [[0.0; 30]; 30],
         vertices: &mut vertices,
@@ -59,4 +60,5 @@ fn main() {
 fn on_update<const W: usize, const H: usize>(engine: &mut BosonEngine<W, H>, delta_time: f64) {
     engine.objects[0].model_matrix *=
         get_rotx(90.0 / 180.0 * PI * delta_time) * get_roty(90.0 / 180.0 * PI * delta_time);
+    *engine.view_matrix *= get_roty(PI * delta_time);
 }

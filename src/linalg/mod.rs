@@ -286,3 +286,14 @@ pub fn get_rotz(radian: f64) -> Mat4x4 {
         ],
     }
 }
+
+pub fn get_offset(x: f64, y: f64, z: f64) -> Mat4x4 {
+    Mat4x4 {
+        data: [
+            [1.0, 0.0, 0.0, x],
+            [0.0, 1.0, 0.0, y],
+            [0.0, 0.0, 1.0, z],
+            [0.0, 0.0, 0.0, 1.0],
+        ],
+    }
+}
