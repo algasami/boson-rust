@@ -2,7 +2,7 @@ use std::{f64::consts::PI, time::Instant};
 
 use boson_rust::{
     engine::{BosonEngine, Object3D},
-    linalg::{get_rotx, get_roty, Mat4x4, Vec3, ID_MAT4X4},
+    linalg::{get_offset, get_rotx, get_roty, Mat4x4, Vec3, ID_MAT4X4},
 };
 
 fn main() {
@@ -23,17 +23,30 @@ fn main() {
             data: [0.0, 0.0, 0.0],
         },
     ];
-    let mut objects = vec![Object3D {
-        mesh: vec![[0, 1, 2], [0, 1, 3], [0, 2, 3], [1, 2, 3]],
-        model_matrix: Mat4x4 {
-            data: [
-                [2.0, 0.0, 0.0, 0.0],
-                [0.0, 2.0, 0.0, 0.0],
-                [0.0, 0.0, 2.0, 3.0],
-                [0.0, 0.0, 0.0, 1.0],
-            ],
+    let mut objects = vec![
+        Object3D {
+            mesh: vec![[0, 1, 2], [0, 1, 3], [0, 2, 3], [1, 2, 3]],
+            model_matrix: Mat4x4 {
+                data: [
+                    [2.0, 0.0, 0.0, 0.0],
+                    [0.0, 2.0, 0.0, 0.0],
+                    [0.0, 0.0, 2.0, 3.0],
+                    [0.0, 0.0, 0.0, 1.0],
+                ],
+            },
         },
-    }];
+        Object3D {
+            mesh: vec![[0, 1, 2], [0, 1, 3], [0, 2, 3], [1, 2, 3]],
+            model_matrix: Mat4x4 {
+                data: [
+                    [2.0, 0.0, 0.0, 0.0],
+                    [0.0, 2.0, 0.0, 0.0],
+                    [0.0, 0.0, 2.0, -3.0],
+                    [0.0, 0.0, 0.0, 1.0],
+                ],
+            },
+        },
+    ];
 
     let mut engine: BosonEngine<30, 30> = BosonEngine {
         ibuffer: [[0.0; 30]; 30],
