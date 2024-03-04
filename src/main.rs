@@ -2,7 +2,7 @@ use std::{f64::consts::PI, time::Instant};
 
 use boson_rust::{
     engine::{BosonEngine, Object3D},
-    linalg::{get_offset, get_rotx, get_roty, Mat4x4, Vec3, ID_MAT4X4},
+    linalg::{get_rotx, get_roty, Mat4x4, Vec3, ID_MAT4X4},
 };
 
 fn main() {
